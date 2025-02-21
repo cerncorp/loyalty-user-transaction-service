@@ -1,0 +1,9 @@
+
+### Push an USER purchase event
+POST http://localhost:7182/loyalty/user-purchase
+Content-Type: application/json
+
+{
+  "userId": 21,
+  "amount": 200000
+}

@@ -1,31 +1,36 @@
-package asia.itech.loy.usertransactionservice.job.kafka;
+package asia.itech.loy.usertransactionservice.controller;
 
 import asia.itech.loy.usertransactionservice.dto.event.PurchaseEvent;
+import asia.itech.loy.usertransactionservice.dto.request.UserPurchaseRequest;
 import asia.itech.loy.usertransactionservice.service.IPurchaseEventProducerService;
 import com.github.javafaker.Faker;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
 
-@Service
 @Slf4j
-public class PurchaseEventSchedulerJob {
+@RestController
+public class LoyaltyPointsController {
 
     @Autowired
     IPurchaseEventProducerService purchaseEventProducerService;
 
-    @Scheduled(fixedDelay = 10000)
-    public void scheduleFixedDelayTask() {
+    @PostMapping("/loyalty/user-purchase")
+    public ResponseEntity<String> postLoyaltyPoints(
+            @Valid @RequestBody UserPurchaseRequest request
+    ) {
 
+        log.info("Loyalty Points request: {}", request);
         Faker faker = new Faker();
 
         PurchaseEvent purchaseEvent = new PurchaseEvent(
                 faker.number().randomNumber(5, false),
-                faker.number().randomNumber(5, false),
-                faker.number().randomDouble(9, 100000, 100000000),
+                request.userId(), // faker.number().randomNumber(5, false),
+                request.amount(), // faker.number().randomDouble(9, 100000, 100000000),
                 faker.date().past(30, TimeUnit.DAYS),
                 faker.university().name()
 
@@ -36,5 +41,7 @@ public class PurchaseEventSchedulerJob {
 
         purchaseEventProducerService.sendPurchaseEvent(purchaseEvent);
 
+
+        return ResponseEntity.noContent().build();
     }
 }
