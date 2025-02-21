@@ -29,7 +29,7 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         configProps.put(ProducerConfig.CLIENT_ID_CONFIG, appId);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "asia.itech.loy.pointmanagement.util.kafka.PurchaseEventSerializer");
+        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "asia.itech.loy.usertransactionservice.util.kafka.PurchaseEventSerializer");
 
         return new DefaultKafkaProducerFactory<>(configProps);
     }
